@@ -1,12 +1,6 @@
 import glob
 import pandas as pd
 import os
-import shutil
-
-# def create_annotation_file(file_path):
-#     label = os.path.basename(file_path)
-#     images_list = glob.glob(f'{file_path}/*/*jpg')
-
 
 # create a class for creating annotation file
 class CreateAnnotationFile:
@@ -33,7 +27,7 @@ class CreateAnnotationFile:
         # create annotation folder if not exists
         if not os.path.exists('annotation'):
             os.makedirs('annotation')
-            
+
         # save annotation file in current directory
         train_df.to_csv(f'annotation/{self.subset_name}_annotations.csv', index=False)
 
