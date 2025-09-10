@@ -1,5 +1,6 @@
 # dataset
-breast_cancer_dataset/
+breast_cancer_data/
+annotation/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
