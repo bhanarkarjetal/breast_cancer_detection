@@ -1,3 +1,6 @@
+# dataset
+breast_cancer_dataset/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -9,7 +12,7 @@ __pycache__/
 # Distribution / packaging
 .Python
 env/
-venv/
+.venv/
 ENV/
 env.bak/
 venv.bak/
