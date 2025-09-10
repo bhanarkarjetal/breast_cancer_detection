@@ -22,14 +22,15 @@ class CreateAnnotationFile:
             labels.extend([path] * len(images))
 
         data = {'image_path': image_list, 'label': labels}
-        train_df = pd.DataFrame(data)
+        self.annotation_df = pd.DataFrame(data)
 
+    def save_annotation_file(self, destination_path):
         # create annotation folder if not exists
-        if not os.path.exists('annotation'):
-            os.makedirs('annotation')
+        if not os.path.exists(destination_path):
+            os.makedirs(destination_path)
 
         # save annotation file in current directory
-        train_df.to_csv(f'annotation/{self.subset_name}_annotations.csv', index=False)
+        self.annotation_df.to_csv(f'{destination_path}/{self.subset_name}_annotations.csv', index=False)
 
 
 if __name__ == "__main__":
@@ -41,11 +42,14 @@ if __name__ == "__main__":
     train_annotation = CreateAnnotationFile(
         dataset_dir_name='breast_cancer_data', subset_name='train')
     train_annotation.create_annotation()
+    train_annotation.save_annotation_file('annotation')
 
     test_annotation = CreateAnnotationFile(
         dataset_dir_name='breast_cancer_data', subset_name='test')
     test_annotation.create_annotation()
-
+    test_annotation.save_annotation_file('annotation')
+    
     val_annotation = CreateAnnotationFile(
         dataset_dir_name='breast_cancer_data', subset_name='valid')
     val_annotation.create_annotation()
+    val_annotation.save_annotation_file('annotation')

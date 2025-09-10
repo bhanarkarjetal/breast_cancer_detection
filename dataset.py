@@ -9,11 +9,9 @@ local_path_dir = kagglehub.dataset_download("hayder17/breast-cancer-detection")
 # create new folder to copy files from 'local_path_dir'
 new_folder = "breast_cancer_data"
 
-if not os.path.exists(f'src/{new_folder}'):
-    os.makedirs(f'src/{new_folder}')
+if not os.path.exists(f'{new_folder}'):
+    os.makedirs(f'{new_folder}')
 
 # copying all the files from 'local_path_dir'
-shutil.copytree(local_path_dir, f'src/{new_folder}', dirs_exist_ok=True)
+shutil.copytree(local_path_dir, new_folder, dirs_exist_ok=True)
 
-# remove source directory
-shutil.rmtree(local_path_dir)
