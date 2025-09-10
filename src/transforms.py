@@ -12,7 +12,6 @@ class data_transform():
         self.resize = resize
         self.random_crop = random_crop
         self.normalize = normalize
-        self.to_tensor = to_tensor
         self.random_horizontal_flip = random_horizontal_flip
         self.random_vertical_flip = random_vertical_flip
         self.random_photometric_distort = random_photometric_distort
@@ -41,7 +40,7 @@ class data_transform():
 
         transform_list.append(v2.ToImage())
         transform_list.append(v2.ToDtype(torch.float, scale = True))
-        
+
         if self.normalize:
             transform_list.append(v2.Normalize())
         else:
