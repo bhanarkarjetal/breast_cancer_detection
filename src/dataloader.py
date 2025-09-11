@@ -1,13 +1,13 @@
-import torch
 from torch.utils.data import DataLoader
 from create_dataset import BreastCancerDataset
+from typing import Optional, Callable
 
-class dataloader(DataLoader):
-    def __init__(self, annotation_file, 
-                 transforms, 
-                 root_dir,
-                 batch_size = None, 
-                 shuffle = True):
+class DataLoaderWrapper(DataLoader):
+    def __init__(self, annotation_file: str, 
+                 transforms: Optional[Callable] = None, 
+                 root_dir: str = '',
+                 batch_size: int = None, 
+                 shuffle: bool = True):
         
         self.annotation_file = annotation_file
         self.transforms = transforms
