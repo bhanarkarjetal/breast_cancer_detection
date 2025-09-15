@@ -1,3 +1,4 @@
+pip==25.2
 datasets==3.0.1
 matplotlib==3.9.2
 pandas==2.2.3
@@ -10,3 +11,10 @@ scipy==1.14.1
 opencv-python==4.10.0.84
 setuptools==75.6.0
 kagglehub==0.3.13
+typing_extensions==4.14.1
+seaborn==0.13.2
+scikit-learn==1.7.1
+tqdm==4.67.1
+joblib==1.5.1
+ipykernel==6.30.1
+ipython==8.12.3
