@@ -40,8 +40,6 @@ class DataTransform():
             'random_horizontal_flip': v2.RandomHorizontalFlip,
             'random_vertical_flip': v2.RandomVerticalFlip,
             'random_photometric_distort': v2.RandomPhotometricDistort,
-            'to_image': v2.ToImage,
-            'to_dtype': v2.ToDtype,
             'normalize': v2.Normalize
         }
 
