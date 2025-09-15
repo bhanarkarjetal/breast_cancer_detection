@@ -1,8 +1,20 @@
+import torch
 import torch.nn as nn
+from typing import Optional
 
-class LossFunction:
-    def __init__(self):
-        self.criterion = nn.CrossEntropyLoss()
+def compute_loss(predictions: torch.Tensor, 
+                 targets: torch.Tensor,
+                 class_weights: Optional[torch.Tensor] = None) -> torch.Tensor:
+    """
+    Compute the cross-entropy loss between predictions and targets.
+    
+    Args:
+        predictions (torch.Tensor): The predicted logits from the model.
+        targets (torch.Tensor): The true class labels.
+    
+    Returns:
+        torch.Tensor: The computed cross-entropy loss.
+        """
+    criterion = nn.CrossEntropyLoss(weight=class_weights)
 
-    def compute_loss(self, predictions, targets):
-        return self.criterion(predictions, targets)
+    return criterion(predictions, targets)
