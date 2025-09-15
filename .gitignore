@@ -1,118 +1,42 @@
-# dataset
-breast_cancer_data/
-annotation/
-
-# Byte-compiled / optimized / DLL files
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
-
-# C extensions
 *.so
-
-# Distribution / packaging
-.Python
-env/
-.venv/
-ENV/
-env.bak/
-venv.bak/
-.pytest_cache/
-build/
-develop-eggs/
-dist/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-*.egg-info/
-.installed.cfg
-*.egg
-*.whl
-
-# PyInstaller
-# Usually these files are written by a python script from a template
-# before PyInstaller builds the binary
-*.manifest
-*.spec
-
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
 
 # Jupyter Notebook
 .ipynb_checkpoints
 
-# pyenv
-.python-version
+# Datasets
+data/
+datasets/
+breast_cancer_data/
 
-# dotenv
-.env
+# Annotation and Output Files
+annotation/
+output/
+results/
+*.csv
+*.tsv
+*.json
+*.pkl
+*.parquet
+
+# IDE and Editor
+.idea/
+.vscode/
+*.swp
+*~
+.DS_Store
+
+# PyTorch
+*.pt
+*.pth
+*.safetensors
+
+# Environment variables
 .venv
 
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Pyre type checker
-.pyre/
-
-# VS Code
-.vscode/
-
-# MacOS
-.DS_Store
-*.DS_Store
-
-# PyCharm
-.idea/
-*.iml
-
-# Sublime Text
-*.sublime-workspace
-*.sublime-project
-
-# Spyder project settings
-.spyderproject
-.spyproject
-
-# Byte-compiled / optimized files
-*.py[cod]
-
-# Local cache
-.cache/
-
-# Logs
+# Logs and temporary files
 *.log
-
-# SQLite databases
-*.sqlite3
-
-# Temporary files
-*.temp
-*.tmp
-
-# Images for documentation
-docs/_build/
-
-# Sphinx documentation
-docs/_build/
-build/
+temp/
