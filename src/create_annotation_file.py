@@ -9,6 +9,12 @@ class CreateAnnotationFile:
         self.subset_name = subset_name
 
     def create_annotation(self):
+        """
+        Create annotation file for the given subset (train, test, valid)
+        
+        Returns: 
+            annotation_df: pandas DataFrame containing image paths and labels
+        """
         image_list = []
         labels = []
 
@@ -24,13 +30,20 @@ class CreateAnnotationFile:
         data = {'image_path': image_list, 'label': labels}
         self.annotation_df = pd.DataFrame(data)
 
-    def save_annotation_file(self, destination_path):
-        # create annotation folder if not exists
+        return self.annotation_df
+
+    def save_annotation_file(self, df: pd.DataFrame, destination_path: str):
+        """
+        Save the annotation DataFrame to a CSV file in the specified destination path.
+        Args:
+            df (pd.DataFrame): The annotation DataFrame to save.
+            destination_path (str): The path to the destination folder.
+        """
         if not os.path.exists(destination_path):
             os.makedirs(destination_path)
 
         # save annotation file in current directory
-        self.annotation_df.to_csv(f'{destination_path}/{self.subset_name}_annotations.csv', index=False)
+        df.to_csv(f'{destination_path}/{self.subset_name}_annotations.csv', index=False)
 
 
 if __name__ == "__main__":
