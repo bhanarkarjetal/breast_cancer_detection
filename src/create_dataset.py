@@ -15,6 +15,10 @@ class BreastCancerDataset(Dataset):
         return len(self.data_frame)
 
     def __getitem__(self, idx):
+        
+        if idx > len(self):
+            raise IndexError("Given index is beyond the length of dataset.")
+        
         img_name = os.path.join(self.root_dir, self.data_frame.iloc[idx, 0])
         image = Image.open(img_name)
         label = self.data_frame.iloc[idx, 1]
