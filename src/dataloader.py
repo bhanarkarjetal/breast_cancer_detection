@@ -1,6 +1,9 @@
+from typing import Callable, Optional
+
 from torch.utils.data import DataLoader
+
 from create_dataset import BreastCancerDataset
-from typing import Optional, Callable
+
 
 def get_data_loader(
     annotation_file: str,
@@ -8,11 +11,11 @@ def get_data_loader(
     transforms: Optional[Callable] = None,
     batch_size: int = 32,
     shuffle: bool = True,
-    num_workers: int = 2
+    num_workers: int = 2,
 ):
     """
     Utility function to create a DataLoader for the BreastCancerDataset.
-    
+
     Args:
         annotation_file (str): Path to the CSV file with annotations.
         root_dir (str): Directory with all the images.
@@ -28,14 +31,14 @@ def get_data_loader(
     dataset = BreastCancerDataset(
         csv_file=annotation_file,
         root_dir=root_dir,
-        transform=transforms
+        transform=transforms,
     )
 
     data_loader = DataLoader(
         dataset,
         batch_size=batch_size,
         shuffle=shuffle,
-        num_workers=num_workers
+        num_workers=num_workers,
     )
 
     return data_loader

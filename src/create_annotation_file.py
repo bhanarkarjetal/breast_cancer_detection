@@ -1,6 +1,8 @@
 import glob
-import pandas as pd
 import os
+
+import pandas as pd
+
 
 # create a class for creating annotation file
 class CreateAnnotationFile:
@@ -11,8 +13,8 @@ class CreateAnnotationFile:
     def create_annotation(self):
         """
         Create annotation file for the given subset (train, test, valid)
-        
-        Returns: 
+
+        Returns:
             annotation_df: pandas DataFrame containing image paths and labels
         """
         image_list = []
@@ -23,11 +25,11 @@ class CreateAnnotationFile:
             raise ValueError(f"Subset path {subset_path} does not exist.")
 
         for path in os.listdir(subset_path):
-            images = glob.glob(f'{subset_path}/{path}/*jpg')
+            images = glob.glob(f"{subset_path}/{path}/*jpg")
             image_list.extend(images)
             labels.extend([path] * len(images))
 
-        data = {'image_path': image_list, 'label': labels}
+        data = {"image_path": image_list, "label": labels}
         self.annotation_df = pd.DataFrame(data)
 
         return self.annotation_df
@@ -43,26 +45,21 @@ class CreateAnnotationFile:
             os.makedirs(destination_path)
 
         # save annotation file in current directory
-        df.to_csv(f'{destination_path}/{self.subset_name}_annotations.csv', index=False)
+        df.to_csv(
+            f"{destination_path}/{self.subset_name}_annotations.csv",
+            index=False,
+        )
 
 
 if __name__ == "__main__":
-    # create annotation folder if not exists
-    if not os.path.exists('annotation'):
-        os.makedirs('annotation')
+    dataset_dir_name = "breast_cancer_data"
+    subset_name = "train"  # can be 'train', 'test', or 'valid'
+    destination_path = "test_annotation"
 
-    # create annotation file in annotation folder
-    train_annotation = CreateAnnotationFile(
-        dataset_dir_name='breast_cancer_data', subset_name='train')
-    train_annotation.create_annotation()
-    train_annotation.save_annotation_file('annotation')
+    annotation_creator = CreateAnnotationFile(dataset_dir_name, subset_name)
+    annotation_df = annotation_creator.create_annotation()
+    annotation_creator.save_annotation_file(annotation_df, destination_path)
 
-    test_annotation = CreateAnnotationFile(
-        dataset_dir_name='breast_cancer_data', subset_name='test')
-    test_annotation.create_annotation()
-    test_annotation.save_annotation_file('annotation')
-    
-    val_annotation = CreateAnnotationFile(
-        dataset_dir_name='breast_cancer_data', subset_name='valid')
-    val_annotation.create_annotation()
-    val_annotation.save_annotation_file('annotation')
+    print(
+        f"Annotation file for {subset_name} subset saved to {destination_path}/{subset_name}_annotations.csv"
+    )
