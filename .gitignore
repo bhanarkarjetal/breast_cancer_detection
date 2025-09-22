@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 *.so
+.mypy_cache/
 
 # Jupyter Notebook
 .ipynb_checkpoints
@@ -11,6 +12,7 @@ __pycache__/
 data/
 datasets/
 breast_cancer_data/
+annotation/
 
 # Annotation and Output Files
 annotation/
