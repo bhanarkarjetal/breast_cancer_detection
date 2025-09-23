@@ -12,7 +12,8 @@ __pycache__/
 data/
 datasets/
 breast_cancer_data/
-annotation/
+annotation_files/
+test_annotation/
 models/
 
 # Annotation and Output Files
