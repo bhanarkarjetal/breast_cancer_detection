@@ -6,10 +6,8 @@ from torch.utils.data import Dataset
 
 
 class BreastCancerDataset(Dataset):
-    def __init__(self, csv_file, root_dir, transform=None):
+    def __init__(self, csv_file):
         self.data_frame = pd.read_csv(csv_file)
-        self.root_dir = root_dir
-        self.transform = transform
 
     def __len__(self):
         return len(self.data_frame)
@@ -19,10 +17,8 @@ class BreastCancerDataset(Dataset):
         if idx > len(self):
             raise IndexError("Given index is beyond the length of dataset.")
         
-        img_name = self.data_frame.iloc[idx, 0]
+        img_name = os.path.join(self.data_frame.iloc[idx, 0])
+        image = Image.open(img_name)
         label = self.data_frame.iloc[idx, 1]
-
-        if self.transform:
-            image = self.transform(image)
 
         return image, label
