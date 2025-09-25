@@ -1,9 +1,6 @@
-from typing import Dict
-
+from typing import Dict, Any
 import torch
 import torch.nn as nn
-
-# import torch.functional as F
 
 
 class ImageClassifierCNN(nn.Module):
@@ -15,79 +12,79 @@ class ImageClassifierCNN(nn.Module):
         self,
         input_channel: int,
         num_classes: int,
-        conv_config: list,
-        fc_config: list,
-        input_height: int = 64,
-        input_width: int = 64,
+        conv_config: list[Dict],
+        fc_config: list[Dict],
     ) -> None:
         """
-        Initializes the CNN model based on the provided configuration.
-        Args:
-            input_channel (int): Number of input channels (e.g., 3 for RGB images).
-            n_out_class (int): Number of output classes for classification.
-            conv_config (Dict): Configuration for convolutional layers.
-            fc_config (Dict): Configuration for fully connected layers.
-
-        Example conv_config:
-        [
-            {"out_channels": 16, "kernel_size": 3, "stride": 1, "padding": 1},
-            {"out_channels": 32, "kernel_size": 3, "stride": 1, "padding": 1}
-        ]
-        Example fc_config:
-        [
-            {"out_dim": 128, "dropout": 0.5},
-            {"out_dim": 64}
-        ]
+        Initializes the CNN model with conv layers.
+        FC layers are built lazily when the first input is passed.
         """
         super().__init__()
+        self.num_classes = num_classes
+        self.fc_config = fc_config
+        self.flatten_dim = None  # computed at runtime
 
+        # Build convolutional layers
         conv_layers: list[nn.Module] = []
         conv_in_channel = input_channel
 
         for layer in conv_config:
-            out_channel = layer.get("out_channels")
-            conv_layers.append(nn.Conv2d(in_channels=conv_in_channel, **layer))
+            out_channel = layer.pop("out_channels")
+            conv_kwargs = {
+                k: v
+                for k, v in layer.items()
+                if k in ["kernel_size", "stride", "padding"]
+            }
+
+            conv_layers.append(
+                nn.Conv2d(in_channels=conv_in_channel, out_channels=out_channel, **conv_kwargs)
+            )
             conv_layers.append(nn.BatchNorm2d(num_features=out_channel))
-            conv_layers.append(nn.ReLU())
-            conv_layers.append(nn.MaxPool2d(kernel_size=2))
+            conv_layers.append(nn.ReLU(inplace=True))
+
+            if "dropout" in layer:
+                conv_layers.append(nn.Dropout2d(layer["dropout"]))
+
+            if layer.get("pool", True):
+                conv_layers.append(nn.MaxPool2d(kernel_size=2))
 
             conv_in_channel = out_channel
 
         self.conv = nn.Sequential(*conv_layers)
+        self.fc = None  # will be created after flatten_dim is known
 
-        # flatten output layer for fc layers
-        dummy = torch.rand(1, input_channel, input_height, input_width)
-        flat_dim = self._flatten_layer(dummy)
-
+    def _build_fc(self, flat_dim: int) -> None:
+        """
+        Build FC layers dynamically based on computed flat_dim.
+        """
         fc_layers: list[nn.Module] = []
         in_dim = flat_dim
 
-        for hidden_layer in fc_config:
-            out_dim = hidden_layer["out_dim"]
+        for hidden_layer in self.fc_config:
+            out_dim = hidden_layer["out_features"]
             fc_layers.append(nn.Linear(in_dim, out_dim))
-            fc_layers.append(nn.ReLU())
+            fc_layers.append(nn.ReLU(inplace=True))
 
             if "dropout" in hidden_layer:
                 fc_layers.append(nn.Dropout(p=hidden_layer["dropout"]))
 
             in_dim = out_dim
 
-        fc_layers.append(
-            nn.Linear(in_features=in_dim, out_features=num_classes)
-        )
-
+        fc_layers.append(nn.Linear(in_features=in_dim, out_features=self.num_classes))
         self.fc = nn.Sequential(*fc_layers)
-
-    def _flatten_layer(self, x: torch.Tensor) -> int:
-        with torch.no_grad():
-            y = self.conv(x)
-        return torch.flatten(y, 1).size(1)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = self.conv(x)
         x = torch.flatten(x, 1)
-        x = self.fc(x)
 
+        # Build FC on first forward pass
+        if self.fc is None:
+            self.flatten_dim = x.size(1)
+            self._build_fc(self.flatten_dim)
+            # move fc to same device as conv
+            self.fc.to(x.device)
+
+        x = self.fc(x)
         return x
 
 
@@ -97,26 +94,24 @@ if __name__ == "__main__":
             "out_channels": 16,
             "kernel_size": 3,
             "stride": 1,
-            "padding": "same",
+            "padding": 1,
         },
         {
             "out_channels": 32,
             "kernel_size": 3,
             "stride": 1,
-            "padding": "same",
+            "padding": 1,
         },
     ]
 
-    fc_layers = [{"out_dim": 64, "dropout": 0.5}, {"out_dim": 32}]
+    fc_layers = [{"out_features": 64, "dropout": 0.5}, {"out_features": 32}]
 
     model = ImageClassifierCNN(
         input_channel=3,
-        num_classes=10,
+        num_classes=1,
         conv_config=conv_layers,
-        fc_config=fc_layers,
+        fc_config=fc_layers
     )
-
-    print(model)
 
     # Test with a dummy input
     dummy_input = torch.randn(32, 3, 64, 64)

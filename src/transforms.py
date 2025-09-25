@@ -13,21 +13,23 @@ class DataTransform:
         """
 
         # Define default transformations and their parameters
-        self.default_config: Dict[Any, Any] = {
-            "resize": {"size": (256, 256)},
+        self.default_config: Dict[str, Any] = {
+            "resize": {"size": (128, 128)},
+            "random_horizontal_flip": {"p": 0.5},
+            "random_rotation": {"degrees": 15},
+            "brightness_contrast": 
+                {"brightness": 0.1, 
+                 "contrast": 0.1},
             "normalize": {
                 "mean": [0.485, 0.456, 0.406],
                 "std": [0.229, 0.224, 0.225],
             },
-            "random_horizontal_flip": {"p": 0.5},
         }
 
         # Override defaults with user configurations if provided
-        self.config = self.default_config.copy()
-        if user_config:
-            self.config.update(user_config)
+        self.config = {**self.default_config, **(user_config or {})}
 
-    def transform(self):
+    def get_transform(self):
         """
         Build and returns a torchvision.transforms.Compose object based on the config.
 
@@ -40,20 +42,26 @@ class DataTransform:
         # Map string names to torchvision transforms
         transform_map = {
             "resize": v2.Resize,
-            "random_crop": v2.RandomCrop,
             "random_horizontal_flip": v2.RandomHorizontalFlip,
             "random_vertical_flip": v2.RandomVerticalFlip,
-            "random_photometric_distort": v2.RandomPhotometricDistort,
+            "random_rotation": v2.RandomRotation,
+            "brightness_contrast": v2.ColorJitter,
+            "random_crop": v2.RandomCrop,
             "normalize": v2.Normalize,
         }
 
-        for key, transform in self.user_config.items():
-            if key in transform_map:
-                transform_list.append(transform_map[key](**transform))
+        for key, params in self.config.items():
+            if key == 'normalize':
+                 normalize_config = params
+            
+            elif key in transform_map:
+                transform_list.append(transform_map[key](**params))
+
             else:
                 raise ValueError(f"Transform '{key}' is not recognized.")
 
         transform_list.append(v2.ToImage())
         transform_list.append(v2.ToDtype(torch.float, scale=True))
+        transform_list.append(v2.Normalize(**normalize_config))
 
         return v2.Compose(transform_list)
