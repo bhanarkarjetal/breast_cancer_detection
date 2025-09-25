@@ -3,7 +3,6 @@ from typing import Optional
 import torch
 import torch.nn as nn
 
-
 def compute_loss(
     predictions: torch.Tensor,
     targets: torch.Tensor,
@@ -15,7 +14,8 @@ def compute_loss(
     Args:
         predictions (torch.Tensor): The predicted logits from the model.
         targets (torch.Tensor): The true class labels.
-
+        class_weights (torch.Tensor)
+        
     Returns:
         torch.Tensor: The computed cross-entropy loss.
     """
