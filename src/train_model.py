@@ -16,29 +16,26 @@ def train_model(
     Args:
         model: The model to be trained.
         num_epochs: Number of training epochs
-        batch_size: mini batch size
         train_loader: DataLoader for training data.
         val_loader: DataLoader for validation data.
         loss_criterion: The loss function to be used.
-        optimizer_config: The optimizer configuration to be used.
+        optimizer: Optimizer to be used.
 
     Returns:
-        Dict with training/ validation loss history
+        None
     """
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
-
-    loss_criterion.to(device)
     
     for epoch in range(num_epochs):
+        
         # training loop
         model.train()
         epoch_loss_sum = 0.0
 
-        # for idx, data in enumerate(train_loader, start=1):
         for inputs, labels in train_loader:
-            # inputs, labels = data
+
             inputs, labels = inputs.to(device), labels.float().unsqueeze(1).to(device)
 
             optimizer.zero_grad()

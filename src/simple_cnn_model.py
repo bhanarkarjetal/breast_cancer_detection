@@ -60,8 +60,9 @@ class ImageClassifierCNN(nn.Module):
         fc_layers: list[nn.Module] = []
         in_dim = flat_dim
 
-        for hidden_layer in self.fc_config:
+        for i, hidden_layer in enumerate(self.fc_config):
             out_dim = hidden_layer["out_features"]
+
             fc_layers.append(nn.Linear(in_dim, out_dim))
             fc_layers.append(nn.ReLU(inplace=True))
 
@@ -77,11 +78,9 @@ class ImageClassifierCNN(nn.Module):
         x = self.conv(x)
         x = torch.flatten(x, 1)
 
-        # Build FC on first forward pass
         if self.fc is None:
-            self.flatten_dim = x.size(1)
-            self._build_fc(self.flatten_dim)
-            # move fc to same device as conv
+            flat_dim = x.size(1)
+            self._build_fc(flat_dim)
             self.fc.to(x.device)
 
         x = self.fc(x)

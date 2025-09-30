@@ -15,11 +15,6 @@ class DataTransform:
         # Define default transformations and their parameters
         self.default_config: Dict[str, Any] = {
             "resize": {"size": (128, 128)},
-            "random_horizontal_flip": {"p": 0.5},
-            "random_rotation": {"degrees": 15},
-            "brightness_contrast": 
-                {"brightness": 0.1, 
-                 "contrast": 0.1},
             "normalize": {
                 "mean": [0.485, 0.456, 0.406],
                 "std": [0.229, 0.224, 0.225],
