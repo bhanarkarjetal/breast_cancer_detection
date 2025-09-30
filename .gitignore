@@ -14,7 +14,7 @@ datasets/
 breast_cancer_data/
 annotation_files/
 test_annotation/
-models/
+model/
 
 # Annotation and Output Files
 annotation/
