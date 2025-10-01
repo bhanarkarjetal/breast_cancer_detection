@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+*.py[cod]
+*$py.class
+.Python
+build/
+
+# Virtual Environments
+env/
+venv/
+ENV/
+.venv/
+.ENV/
+
+# Data files
+data/
+Data/
+breast_cancer/
+breast_cancer_data/
+annotation_files/
+model/
+test_annotation/
+**.csv
+
+
+# Docker
+.dockerignore
+Dockerfile
+docker-compose.yml
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+
+# VS Code
+.vscode/
+.DS_Store
+
+# OS
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Models 
+model/*.pth
+model/*.pt
+model/*.pkl
+checkpoints/
+
+# Logs
+logs/
+*.log
