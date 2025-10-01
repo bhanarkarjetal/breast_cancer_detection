@@ -100,7 +100,6 @@ jupyter notebook train.ipynb
 - All functions and classes are modular inside the src package for reuse.
 - .dockerignore ensures unnecessary files are excluded from Docker builds.
 - Docker image ensures consistent environment without local setup issues.
-```
 
 ---
 
